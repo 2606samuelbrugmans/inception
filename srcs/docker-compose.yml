@@ -8,7 +8,7 @@ services:
       - wordpress
       - adminer
     ports:
-      - "443:443"
+      - "8443:443"
     volumes:
       - wordpress_data:/home/sbrugman/data
     restart: always
@@ -64,7 +64,6 @@ services:
     restart: always
     networks:
       - network
-
   ftp-server:
     container_name: ftp-server
     build: ./requirements/bonus/ftp_server
@@ -78,7 +77,6 @@ services:
     volumes:
       - wordpress_data:/home/sbrugman/data
     ports:
-      - "21:21"
       - "10000-10010:10000-10010"
 
   static_page:

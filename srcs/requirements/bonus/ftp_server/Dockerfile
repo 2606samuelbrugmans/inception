@@ -7,6 +7,5 @@ COPY ./tools/ftp.conf /etc/ftpd.conf
 COPY ./tools/entry_point.sh /entry_point.sh
 RUN chmod +x /entry_point.sh
 
-EXPOSE 21
 
 ENTRYPOINT ["/entry_point.sh"]
