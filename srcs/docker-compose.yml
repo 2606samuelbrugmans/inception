@@ -1,0 +1,107 @@
+#version: '3.8'
+
+services:
+  nginx:
+    container_name: nginx
+    build: ./requirements/nginx
+    depends_on:
+      - wordpress
+      - adminer
+    ports:
+      - "443:443"
+    volumes:
+      - wordpress_data:/home/sbrugman/data
+    restart: always
+    networks:
+      - network
+  mariadb:
+    container_name: mariadb
+    env_file:
+      - ./requirements/.env
+
+    build: ./requirements/mariadb
+    volumes:
+      - mariadb_data:/home/sbrugman/data
+    restart: always
+    secrets:
+      - mariadb_root_password
+      - mariadb_user_password
+    networks:
+      - network
+  wordpress:
+    container_name: wordpress
+    env_file:
+      - ./requirements/.env
+    build: ./requirements/wordpress
+    depends_on:
+      - mariadb
+    restart: always
+    secrets:
+      - mariadb_user_password
+      - wordpress_password
+    volumes:
+      - wordpress_data:/home/sbrugman/data
+    entrypoint: ["wp-entrypoint.sh"]
+    networks:
+      - network
+
+  adminer:
+    container_name: adminer
+    build: ./requirements/bonus/adminer
+    depends_on:
+      - mariadb
+    expose:
+      - "8888"
+    restart: always
+    networks:
+      - network
+
+  redis:
+    container_name: redis
+    build: ./requirements/bonus/redis
+    depends_on:
+      - wordpress
+    restart: always
+    networks:
+      - network
+
+  ftp-server:
+    container_name: ftp-server
+    build: ./requirements/bonus/ftp_server
+    restart: always
+    env_file:
+      - ./requirements/.env
+    secrets:
+      - ftp_password
+    networks:
+      - network
+    volumes:
+      - wordpress_data:/home/sbrugman/data
+    ports:
+      - "21:21"
+      - "10000-10010:10000-10010"
+
+  static_page:
+    container_name: static_page
+    build: ./requirements/bonus/static_page
+    restart: always
+    networks:
+      - network
+
+volumes:
+  mariadb_data:
+  wordpress_data:
+
+networks:
+  network:
+    driver: bridge
+
+secrets:
+  mariadb_root_password:
+    file: ./../secrets/mariadb_root_password.txt
+  mariadb_user_password:
+    file: ./../secrets/mariadb_user_password.txt
+  wordpress_password:
+    file: ./../secrets/wordpress_password.txt
+  ftp_password:
+    file: ./../secrets/ftp_password.txt
