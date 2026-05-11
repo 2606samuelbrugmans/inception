@@ -18,13 +18,10 @@ if [ ! -e /var/lib/mysql/.firstmount ]; then
         echo "Missing MariaDB secret files: $MYSQL_PASSWORD_FILE or $MYSQL_ROOT_PASSWORD_FILE"
         exit 1
     fi
-
     MYSQL_PASSWORD=$(cat "$MYSQL_PASSWORD_FILE")
     MYSQL_ROOT_PASSWORD=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
-
     mysql_install_db --datadir=/var/lib/mysql --skip-test-db --user=mysql --group=mysql \
         --auth-root-authentication-method=socket >/dev/null 2>/dev/null
-
     mysqld_safe &
     mysqladmin ping -u root --silent --wait
 

@@ -1,0 +1,1 @@
+Error response from daemon: failed to populate volume: error while mounting volume '/goinfre/sbrugman/docker/volumes/srcs_mariadb_data/_data': failed to mount local volume: mount /home/sbrugman/data/wordpress_data:/goinfre/sbrugman/docker/volumes/srcs_mariadb_data/_data, flags: 0x1000: no such file or directory
