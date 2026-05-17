@@ -16,11 +16,10 @@ DB_HOST="${WORDPRESS_DB_HOST:-mariadb}"
 DB_USER="${WORDPRESS_DB_USER:-wpuser}"
 
 # Ensure WordPress core exists FIRST
-if [ ! -f /home/sbrugman/data/wp-load.php ]; then
+if [ ! -f /var/www/html/wp-load.php ]; then
     echo "Downloading WordPress..."
-    wp core download --path=/home/sbrugman/data --allow-root
+    wp core download --path=/var/www/html --allow-root
 fi
-
 # Wait for DB
 echo "Waiting for MariaDB..."
 until mysqladmin ping -h"$DB_HOST" -u"$DB_USER" -p"$DB_PASSWORD" --silent; do
@@ -31,14 +30,14 @@ done
 echo "MariaDB is ready!"
 
 # Create config
-if [ ! -f /home/sbrugman/data/wp-config.php ]; then
+if [ ! -f /var/www/html/wp-config.php ]; then
     echo "Creating wp-config.php..."
     wp config create \
         --dbname="$WORDPRESS_DB_NAME" \
         --dbuser="$WORDPRESS_DB_USER" \
         --dbpass="$DB_PASSWORD" \
         --dbhost="$WORDPRESS_DB_HOST" \
-        --path=/home/sbrugman/data \
+        --path=/var/www/html \
         --allow-root
 fi
 
@@ -47,10 +46,10 @@ echo "Setting up WordPress users..."
 WP_ADMIN_PASS=$(cat /run/secrets/wordpress_password)
 
 # Check if WordPress is already installed
-if ! wp core is-installed --path=/home/sbrugman/data --allow-root 2>/dev/null; then
+if ! wp core is-installed --path=/var/www/html --allow-root 2>/dev/null; then
     echo "Installing WordPress..."
     wp core install \
-        --path=/home/sbrugman/data \
+        --path=/var/www/html \
         --url="https://sbrugman.42.fr" \
         --title="sbrugman's Website" \
         --admin_user="$WP_ADMIN_USER" \
@@ -62,7 +61,7 @@ if ! wp core is-installed --path=/home/sbrugman/data --allow-root 2>/dev/null; t
     wp user create contributor contributor@sbrugman.42.fr \
         --user_pass="$WP_ADMIN_PASS" \
         --role=contributor \
-        --path=/home/sbrugman/data \
+        --path=/var/www/html = \
         --allow-root || echo "Contributor user may already exist"
 fi
 
