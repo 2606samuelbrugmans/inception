@@ -17,7 +17,7 @@ services:
   mariadb:
     container_name: mariadb
     env_file:
-      - ./requirements/.env
+      - ./.env
     build: ./requirements/mariadb
     volumes:
       - mariadb_data:/var/lib/mysql
@@ -30,7 +30,7 @@ services:
   wordpress:
     container_name: wordpress
     env_file:
-      - ./requirements/.env
+      - ./.env
     build: ./requirements/wordpress
     depends_on:
       - mariadb
@@ -68,7 +68,7 @@ services:
     build: ./requirements/bonus/ftp_server
     restart: always
     env_file:
-      - ./requirements/.env
+      - ./.env
     secrets:
       - ftp_password
     networks:

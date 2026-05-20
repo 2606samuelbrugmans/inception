@@ -13,7 +13,7 @@ fi
 echo "$FTP_USR:$FTP_PWD" | chpasswd
 
 # Give access to wordpress volume
-chown -R "$FTP_USR":"$FTP_USR" /home/sbrugman/data
+chown -R "$FTP_USR":"$FTP_USR" /var/www/html
 
 # Start FTP server
-exec /usr/sbin/vsftpd /etc/ftpd.conf
+exec /usr/sbin/vsftpd /etc/vsftpd.conf
