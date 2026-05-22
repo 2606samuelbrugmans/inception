@@ -77,7 +77,7 @@ services:
       - wordpress_data:/var/www/html
     ports:
       - "10000-10010:10000-10010"
-
+      - "21:21"
   static_page:
     container_name: static_page
     build: ./requirements/bonus/static_page

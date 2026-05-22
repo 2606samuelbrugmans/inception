@@ -1,7 +1,7 @@
 FROM alpine:3.20
 
 RUN apk add --no-cache vsftpd shadow
-
+RUN mkdir -p /var/run/ftpd/empty
 # Copy config + entrypoint
 COPY ./tools/ftp.conf /etc/vsftpd.conf
 COPY ./tools/entry_point.sh /entry_point.sh
